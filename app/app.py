@@ -23,3 +23,11 @@ def add_incomes():
     income.reference_month = r.get('reference_month')
     income.save()
     return jsonify({"data" : income.to_json()}), 201
+
+@app.route('/v1/finances/incomes', methods=['GET'])
+def get_incomes():
+    incomes = Income.objects()
+    data = []
+    for income in incomes:
+        data.append(income.to_json())
+    return jsonify({"data" : incomes, "success" : True}), 201
