@@ -1,4 +1,7 @@
 from flask import Flask, jsonify, request
+import mongoengine
+
+from models.income import Income
 
 app = Flask(__name__)
 
@@ -12,6 +15,11 @@ def health_check():
     return jsonify({"message" : "I'm okay"}), 200
 
 # Finances module
-@app.route('/v1/finances/incomes', method=['POST'])
+@app.route('/v1/finances/incomes', methods=['POST'])
 def add_incomes():
-    request.json()
+    r = request.json()
+    income = Income()
+    income.amount = r.get('amount')
+    income.reference_month = r.get('reference_month')
+    income.save()
+    return jsonify({"data" : income.to_json()}), 201
